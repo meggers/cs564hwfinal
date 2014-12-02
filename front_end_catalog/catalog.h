@@ -9,7 +9,7 @@
 
 
 #define RELCATNAME   "relcat"           // name of relation catalog
-#define ATTRCATNAME  "attrcat"          // name of attribute catalog
+define ATTRCATNAME  "attrcat"          // name of attribute catalog
 #define MAXNAME      32                 // length of relName, attrName
 #define MAXSTRINGLEN 255                // max. length of string attribute
 

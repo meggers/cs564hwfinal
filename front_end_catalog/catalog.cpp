@@ -79,7 +79,7 @@ const Status AttrCatalog::getInfo(const string & relation,
 	// Start Scan
 	status = hfs-startScan(
 		0,
-		???,
+		sizeof(relation),
 		STRING,
 		relation,
 		EQ
@@ -105,14 +105,19 @@ const Status AttrCatalog::getInfo(const string & relation,
 
 const Status AttrCatalog::addInfo(AttrDesc & record)
 {
-  RID rid;
-  InsertFileScan*  ifs;
-  Status status;
+	RID rid;
+	Record rec;
+	Status status;
+	InsertFileScan*  ifs;
 
+	ifs = new InsertFileScan(ATTRCATNAME, status);
+	if (status != OK) return status;
 
+	rec.data = &record;
+	rec.length = sizeof(AttrDesc);
 
-
-
+	status = ifs->insertRecord(rec, rid);
+	return status;
 }
 
 

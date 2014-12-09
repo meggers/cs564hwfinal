@@ -77,14 +77,7 @@ const Status AttrCatalog::getInfo(const string & relation,
 	if (status != OK) return status;
 
 	// Start Scan
-	status = hfs-startScan(
-		0,
-		sizeof(relation),
-		STRING,
-		relation,
-		EQ
-	);
-
+	status = hfs-startScan(0, sizeof(relation), STRING, relation, EQ);
 	if (status != OK) return status;
 
 	while (status != FILEEOF) {
@@ -139,16 +132,36 @@ const Status AttrCatalog::getRelInfo(const string & relation,
 				     int &attrCnt,
 				     AttrDesc *&attrs)
 {
-  Status status;
-  RID rid;
-  Record rec;
-  HeapFileScan*  hfs;
+	Status status;
+	RID rid;
+	Record rec;
+	HeapFileScan*  hfs;
 
-  if (relation.empty()) return BADCATPARM;
+	if (relation.empty()) return BADCATPARM;
 
+	// Initialize Heap File Scan
+	hfs = new HeapFileScan(ATTRCATNAME, status);
+	if (status != OK) return status;
 
+	// Start Scan
+	status = hfs-startScan(0, sizeof(relation), STRING, relation, EQ);
+	if (status != OK) return status;
 
+	while (status != FILEEOF) {
+		status = hfs->scanNext(rid);
+		if (status != OK) break;
 
+		status = hfs->getRecord(rec);
+		if (status != OK) break;
+
+		attrCnt ++;
+    		memcpy(&attrs[attrCnt - 1], rec.data, rec.length);
+	}
+	
+	if (attrCnt == 0) return RELNOTFOUND;
+
+	status = hfs->endScan();
+	return status;
 }
 
 

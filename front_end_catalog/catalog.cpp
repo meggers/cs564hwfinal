@@ -15,11 +15,26 @@ const Status RelCatalog::getInfo(const string & relation, RelDesc &record)
 
   Status status;
   Record rec;
-  RID rid;
+  RID rid;  
+  
+  // Create the heapFileScan (piazza cid=328)
+  HeapFileScan* heapFile = new HeapFileScan(RELCATNAME, status);
+  if(status != OK) return status;
 
-
-
-
+  // No clue on parameters here, but need to start a scan
+  status = heapFile->startScan(0, 0, STRING, relation.c_str(), EQ);  
+  if(status != OK) return status;
+  
+  // Store the first matching RID in rid
+  status = heapFile->scanNext(rid); 
+  if (status != OK) return status; 
+  
+  // Get the actual record data
+  status = getRecord(rid, rec); 
+  if (status != OK) return status;
+  
+  // Memcpy into record return param
+  memcpy(&record, &rec.data, rec.length);
 }
 
 

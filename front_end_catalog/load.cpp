@@ -27,24 +27,23 @@ const Status UT_Load(const string & relation, const string & fileName)
     return BADCATPARM;
 
   // open Unix data file
-
   int fd;
   if ((fd = open(fileName.c_str(), O_RDONLY, 0)) < 0)
     return UNIXERR;
 
   // get relation data
+  status = relCat->getInfo(relation, rd);
+  if (status != OK) return status;
 
-
-
+  status = attrCat->getRelInfo(rd.relName, attrCnt, attrs)
+  if (status != OK) return status;
 
   // start insertFileScan on relation
+  iFile = new InsertFileScan(rd.relName, status);
+  if (status != OK) return status;
 
-
-
-
-
-
-
+  for (int i = 0; i < attrCnt; i++)
+    width += attrs[i].attrLen;
 
   // allocate buffer to hold record read from unix file
   char *record;

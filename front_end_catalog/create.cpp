@@ -15,10 +15,9 @@ const Status RelCatalog::createRel(const string & relation,
   if (relation.length() >= sizeof rd.relName)
     return NAMETOOLONG;
 
-
-
-
-
-
+  if(getInfo(relation, record) != OK) // If it doesn't already exist
+  {
+    rd = new RelDesc() {relName =  , attrCnt = };
+  }
 }
 

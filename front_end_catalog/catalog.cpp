@@ -60,7 +60,7 @@ const Status RelCatalog::removeInfo(const string & relation)
 	hfs = new HeapFileScan(RELCATNAME, status);
 	if (status != OK) return status;
 
-	status = hfs->startScan(0, relation.length() + 1, STRING, relation, EQ);
+	status = hfs->startScan(0, relation.length() + 1, STRING, relation.c_str(), EQ);
 	if (status != OK) return status;
 
 	status = hfs->scanNext(rid);
@@ -103,7 +103,7 @@ const Status AttrCatalog::getInfo(const string & relation,
 	if (status != OK) return status;
 
 	// Start Scan
-	status = hfs-startScan(0, sizeof(relation), STRING, relation, EQ);
+	status = hfs->startScan(0, sizeof(relation), STRING, relation.c_str(), EQ);
 	if (status != OK) return status;
 
 	while (status != FILEEOF) {
@@ -114,7 +114,7 @@ const Status AttrCatalog::getInfo(const string & relation,
 		if (status != OK) break;
 
 		memcpy(&record, rec.data, rec.length);
-		if(strcmp(record.relName, relation) == 0 && strcmp(record.attrName, attrName) == 0) break;
+		if(strcmp(record.relName, relation.c_str()) == 0 && strcmp(record.attrName, attrName.c_str()) == 0) break;
 	}
 
 	status = hfs->endScan();
@@ -170,7 +170,7 @@ const Status AttrCatalog::getRelInfo(const string & relation,
 	if (status != OK) return status;
 
 	// Start Scan
-	status = hfs-startScan(0, sizeof(relation), STRING, relation, EQ);
+	status = hfs->startScan(0, sizeof(relation), STRING, relation.c_str(), EQ);
 	if (status != OK) return status;
 
 	while (status != FILEEOF) {

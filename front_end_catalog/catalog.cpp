@@ -36,14 +36,25 @@ const Status RelCatalog::addInfo(RelDesc & record)
 
 const Status RelCatalog::removeInfo(const string & relation)
 {
-  Status status;
-  RID rid;
-  HeapFileScan*  hfs;
+	Status status;
+	RID rid;
+	HeapFileScan*  hfs;
 
-  if (relation.empty()) return BADCATPARM;
+	if (relation.empty()) return BADCATPARM;
 
+	hfs = new HeapFileScan(RELCATNAME, status);
+	if (status != OK) return status;
 
+	status = hfs->startScan(0, relation.length() + 1, STRING, relation, EQ);
+	if (status != OK) return status;
 
+	status = hfs->scanNext(rid);
+	if (status == FILEEOF) status = RELNOTFOUND;
+	
+	status = hfs->deleteRecord();
+	
+	hfs->endScan();
+	return status;
 }
 
 

@@ -39,16 +39,21 @@ const Status RelCatalog::destroyRel(const string & relation)
 
 const Status AttrCatalog::dropRelation(const string & relation)
 {
-  Status status;
-  AttrDesc *attrs;
-  int attrCnt, i;
+	Status status;
+	AttrDesc *attrs;
+	int attrCnt, i;
 
-  if (relation.empty()) return BADCATPARM;
+	if (relation.empty()) return BADCATPARM;
 
+	status = getRelInfo(relation, attrCnt, attrs); 
+	if (status != OK) return status;
 
+	for(i = 0; i < attrCnt; i++) {
+		status = removeInfo(relation, attrs[i].attrName)
+		if (status != OK) return status;
+	}
 
-
-
+	return OK;
 }
 
 

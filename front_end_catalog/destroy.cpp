@@ -45,6 +45,15 @@ const Status AttrCatalog::dropRelation(const string & relation)
 
 	if (relation.empty()) return BADCATPARM;
 
+	status = getRelInfo(relation, attrCnt, attrs); 
+	if (status != OK) return status;
+
+	for(i = 0; i < attrCnt; i++) {
+		status = removeInfo(relation, attrs[i].attrName)
+		if (status != OK) return status;
+	}
+
+	return OK;
 }
 
 

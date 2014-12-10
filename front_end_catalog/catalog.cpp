@@ -35,6 +35,7 @@ const Status RelCatalog::getInfo(const string & relation, RelDesc &record)
   
   // Memcpy into record return param
   memcpy(&record, &rec.data, rec.length);
+  return OK;
 }
 
 

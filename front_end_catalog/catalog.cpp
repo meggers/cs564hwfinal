@@ -43,11 +43,19 @@ const Status RelCatalog::addInfo(RelDesc & record)
 {
   RID rid;
   InsertFileScan*  ifs;
+  Record rec;
   Status status;
 
-
-
-
+  // Create InsertFileScan on the relation catalog
+  ifs = new InsertFileScan(RELCATNAME, status);
+  if (status != OK) return status;
+  
+  // Create the record
+  rec.data = &record;
+  rec.length = sizeof(record);
+  
+  // Add this relation to relCat
+  ifs->insertRecord(rec, rid);
 }
 
 const Status RelCatalog::removeInfo(const string & relation)

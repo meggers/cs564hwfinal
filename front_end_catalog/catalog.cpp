@@ -21,8 +21,8 @@ const Status RelCatalog::getInfo(const string & relation, RelDesc &record)
   HeapFileScan* heapFile = new HeapFileScan(RELCATNAME, status);
   if(status != OK) return status;
 
-  // No clue on parameters here, but need to start a scan
-  status = heapFile->startScan(0, 0, STRING, relation.c_str(), EQ);  
+  // Not sure of parameters here
+  status = heapFile->startScan(0, 0, STRING, relation.c_str(), EQ);
   if(status != OK) return status;
   
   // Store the first matching RID in rid
@@ -66,19 +66,7 @@ const Status RelCatalog::removeInfo(const string & relation)
 
 	if (relation.empty()) return BADCATPARM;
 
-	hfs = new HeapFileScan(RELCATNAME, status);
-	if (status != OK) return status;
-
-	status = hfs->startScan(0, relation.length() + 1, STRING, relation.c_str(), EQ);
-	if (status != OK) return status;
-
-	status = hfs->scanNext(rid);
-	if (status == FILEEOF) status = RELNOTFOUND;
 	
-	status = hfs->deleteRecord();
-	
-	hfs->endScan();
-	return status;
 }
 
 
@@ -159,6 +147,20 @@ const Status AttrCatalog::removeInfo(const string & relation,
   HeapFileScan*  hfs;
 
   if (relation.empty() || attrName.empty()) return BADCATPARM;
+  
+  hfs = new HeapFileScan(RELCATNAME, status);
+  if (status != OK) return status;
+
+  status = hfs->startScan(0, relation.length() + 1, STRING, relation.c_str(), EQ);
+  if (status != OK) return status;
+
+  status = hfs->scanNext(rid);
+  if (status == FILEEOF) status = RELNOTFOUND;
+	
+  status = hfs->deleteRecord();
+	
+  hfs->endScan();
+  return status;
 
 }
 

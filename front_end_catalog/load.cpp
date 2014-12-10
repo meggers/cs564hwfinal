@@ -35,7 +35,7 @@ const Status UT_Load(const string & relation, const string & fileName)
   status = relCat->getInfo(relation, rd);
   if (status != OK) return status;
 
-  status = attrCat->getRelInfo(rd.relName, attrCnt, attrs)
+  status = attrCat->getRelInfo(rd.relName, attrCnt, attrs);
   if (status != OK) return status;
 
   // start insertFileScan on relation

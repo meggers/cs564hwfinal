@@ -49,7 +49,7 @@ const Status AttrCatalog::dropRelation(const string & relation)
 	if (status != OK) return status;
 
 	for(i = 0; i < attrCnt; i++) {
-		status = removeInfo(relation, attrs[i].attrName)
+		status = removeInfo(relation, attrs[i].attrName);
 		if (status != OK) return status;
 	}
 

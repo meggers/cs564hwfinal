@@ -14,16 +14,24 @@
 const Status RelCatalog::destroyRel(const string & relation)
 {
   Status status;
+  RelDesc rd;
 
   if (relation.empty() || 
       relation == string(RELCATNAME) || 
       relation == string(ATTRCATNAME))
     return BADCATPARM;
 
-
-
-
-
+  if(getInfo(relation, rd) == OK) // There is a relation to be destroyed
+  {
+    // Clean up meta-data
+    attrCat->dropRelation(relation);
+    relCat->removeInfo(relation);
+    
+    // Destroy the file
+    destroyHeapFile(relation);
+  }
+  
+  return OK;
 }
 
 

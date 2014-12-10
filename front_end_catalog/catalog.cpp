@@ -60,13 +60,28 @@ const Status RelCatalog::addInfo(RelDesc & record)
 
 const Status RelCatalog::removeInfo(const string & relation)
 {
-	Status status;
-	RID rid;
-	HeapFileScan*  hfs;
+  Status status;
+  RID rid;
+  HeapFileScan*  hfs;
 
-	if (relation.empty()) return BADCATPARM;
-
-	
+  if (relation.empty()) return BADCATPARM;
+  
+  // Create a scan on the relation catalog
+  hfs = new HeapFileScan(RELCATNAME, status);
+  if (status != OK) return status;
+  
+  // Start the scan, not sure on parameters here
+  status = hfs->startScan(0, 0, STRING, relation.c_str(), EQ);
+  if (status != OK) return status;
+  
+  // Get RID of desire relation within relCat
+  status = hfs->scanNext(rid);
+  if (status != OK) return status;
+  
+  status = hfs->deleteRecord(); // The curRec is deleted, which is set by scanNext
+  if (status != OK) return status;
+  
+  return OK;	
 }
 
 

@@ -22,7 +22,7 @@ const Status RelCatalog::getInfo(const string & relation, RelDesc &record)
   if(status != OK) return status;
 
   // Not sure of parameters here
-  status = heapFile->startScan(0, 0, STRING, relation.c_str(), EQ);
+  status = heapFile->startScan(0, sizeof(relation), STRING, relation.c_str(), EQ);
   if(status != OK) return status;
   
   // Store the first matching RID in rid
@@ -35,6 +35,7 @@ const Status RelCatalog::getInfo(const string & relation, RelDesc &record)
   
   // Memcpy into record return param
   memcpy(&record, &rec.data, rec.length);
+  delete heapFile;
   return OK;
 }
 
@@ -56,6 +57,9 @@ const Status RelCatalog::addInfo(RelDesc & record)
   
   // Add this relation to relCat
   ifs->insertRecord(rec, rid);
+  delete ifs
+  
+  return OK;
 }
 
 const Status RelCatalog::removeInfo(const string & relation)
@@ -81,6 +85,7 @@ const Status RelCatalog::removeInfo(const string & relation)
   status = hfs->deleteRecord(); // The curRec is deleted, which is set by scanNext
   if (status != OK) return status;
   
+  delete hfs;
   return OK;	
 }
 

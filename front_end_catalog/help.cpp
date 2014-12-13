@@ -36,12 +36,14 @@ const Status RelCatalog::help(const string & relation)
     status = attrCat->getRelInfo(relation, attrCnt, attrs); // Get the relations to print
     if (status != OK) return status;
     
+    cout << "Relation Name: " << relation << "(" << attrCnt << " attributes)" << endl;
+    
     for(int i = 0; i < attrCnt; i++)
     {
       // Print em out here
+      cout << attrs[i].attrName << attrs[i].attrOffset << attrs[i].attrType << attrs[i].attrLen << endl;
     }
-    
-  }  
+  }
 
   return OK;
 }

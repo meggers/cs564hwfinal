@@ -28,14 +28,18 @@ const Status RelCatalog::help(const string & relation)
   Status status;
   RelDesc rd;
   AttrDesc *attrs;
-  HeapFileScan* hfs;
   int attrCnt;
 
   if (relation.empty()) return UT_Print(RELCATNAME);
   else
   {
-    hfs = new HeapFileScan(ATTRCATNAME, status); if (status != OK) return status;
-    status = hfs->startScan(0, 0, STRING, relation.c_str(), EQ); // Not sure of parameters
+    status = attrCat->getRelInfo(relation, attrCnt, attrs); // Get the relations to print
+    if (status != OK) return status;
+    
+    for(int i = 0; i < attrCnt; i++)
+    {
+      // Print em out here
+    }
     
   }  
 

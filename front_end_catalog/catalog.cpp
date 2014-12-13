@@ -71,7 +71,7 @@ const Status RelCatalog::removeInfo(const string & relation)
   if (status != OK) return status;
   
   // Start the scan, not sure on parameters here
-  status = hfs->startScan(0, 0, STRING, relation.c_str(), EQ);
+  status = hfs->startScan(0, sizeof(relation), STRING, relation.c_str(), EQ);
   if (status != OK) return status;
   
   // Get RID of desire relation within relCat
@@ -166,7 +166,7 @@ const Status AttrCatalog::removeInfo(const string & relation,
 	hfs = new HeapFileScan(ATTRCATNAME, status);
 	if (status != OK) return status;
 
-	status = hfs->startScan(0, relation.length() + 1, STRING, relation.c_str(), EQ);
+	status = hfs->startScan(0, sizeof(relation), STRING, relation.c_str(), EQ);
 	if (status != OK) return status;
 
 	while (hfs->scanNext(rid) != FILEEOF) {

@@ -57,7 +57,7 @@ const Status RelCatalog::addInfo(RelDesc & record)
   
   // Add this relation to relCat
   ifs->insertRecord(rec, rid);
-  delete ifs
+  delete ifs;
   
   return OK;
 }
